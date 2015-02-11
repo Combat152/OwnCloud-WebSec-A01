@@ -2,10 +2,9 @@
 <html>
 	<head>
 	<link rel=" stylesheet" type="text/css" href="core/js/joyride-master/joyride-2.1.css" />
-	<script src="core/js/joyride-master/test.js"></script>
-	<script src="core/js/joyride-master/jquery-1.7.2.min.js"></script>	
-	<script src="core/js/joyride-master/jquery.joyride-2.1.js"></script>
-
+	
+	<script type="text/javascript" src="core/js/jquery-1.7.2.min.js"></script>
+	
 		<title><?php echo isset($_['application']) && !empty($_['application'])?$_['application'].' | ':'' ?>ownCloud <?php echo OC_User::getUser()?' ('.OC_User::getUser().') ':'' ?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="shortcut icon" href="<?php echo image_path('', 'favicon.png'); ?>" /><link rel="apple-touch-icon-precomposed" href="<?php echo image_path('', 'favicon-touch.png'); ?>" />
@@ -29,6 +28,54 @@
 				echo '/>';
 			?>
 		<?php endforeach; ?>
+<div id="dialog-confirm">Are you sure you want to do whatever?</div>
+<script type="text/javascript">
+	var res= confirm('Welcome!! Would like to take a tour of this website');
+	function fnOpenNormalDialog() {
+    // Define the Dialog and its properties.
+    $("#dialog-confirm").dialog({
+        resizable: false,
+        modal: true,
+        title: "Modal",
+        height: 250,
+        width: 400,
+        create: function (e, ui) {
+            var pane = $(this).dialog("widget").find(".ui-dialog-buttonpane")
+            $("<label class='shut-up' ><input  type='checkbox'/> Stop asking!</label>").prependTo(pane)
+        },
+        buttons: {
+            "Yes": function () {
+                $(this).dialog('close');
+                callback(true);
+            },
+                "No": function () {
+                $(this).dialog('close');
+                callback(false);
+            }
+        }
+    });
+}
+	
+fnOpenNormalDialog();
+$(document).on("change", ".shut-up input", function () {
+    alert("shut up! " + this.checked)
+})
+
+function callback(value) {
+    if (value) {
+        alert("Confirmed");
+    } else {
+        alert("Rejected");
+    }
+}
+</script>		
+		
+		
+		<script type="text/javascript" src="core/js/joyride-master/jquery.cookie.js"></script>
+		<script type="text/javascript" src="core/js/joyride-master/modernizr.mq.js"></script>	
+		<script type="text/javascript" src="core/js/joyride-master/jquery.joyride-2.1.js"></script>
+		<script type="text/javascript" src="core/js/joyride-master/test.js"></script>
+	
 	</head>
 
 	<body id="<?php echo $_['bodyid'];?>">
@@ -65,30 +112,14 @@
 		<div id="content">
 			<?php echo $_['content']; ?>
 		</div>
-		
 		<ol id="joyrideid">
-			<li id="new_button">This is to upload a new File</li>	
+			<li data-id="new_button">Click on this button to upload a file.</li>
+			<li data-id="fileList">Click on this bar to edit file</li>	
+			<li data-id="sharebutton">Click here to share this file</li>
+			<li data-id="deletebutton">Click here to delete this particular file</li>
 		</ol>
-		<script>
-			$(window).load(function() {
-  			$("joyrideid").joyride({
-       		  'tipLocation': 'bottom',           // 'top' or 'bottom' in relation to parent
-			  'nubPosition': 'auto',           // override on a per tooltip bases
-			  'scrollSpeed': 300,              // Page scrolling speed in ms
-			  'timer': 2000,                   // 0 = off, all other numbers = time(ms) 
-			  'startTimerOnClick': true,       // true/false to start timer on first click
-			  'nextButton': true,              // true/false for next button visibility
-			  'tipAnimation': 'pop',           // 'pop' or 'fade' in each tip
-			  'pauseAfter': [],                // array of indexes where to pause the tour after
-			  'tipAnimationFadeSpeed': 300,    // if 'fade'- speed in ms of transition
-			  'cookieMonster': true,           // true/false for whether cookies are used
-			  'cookieName': 'JoyRide',         // choose your own cookie name
-			  'cookieDomain': false,           // set to false or yoursite.com
-	
-  			});
-		});
-			
-		</script>
+
+
 			
 	</body>
 </html>

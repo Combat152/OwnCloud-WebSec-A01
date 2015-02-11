@@ -8,7 +8,7 @@
 
 /*jslint unparam: true, browser: true, indent: 2 */
 
-;(function ($, window, undefined) {
+(function ($, window, undefined) {
   'use strict';
 
   var defaults = {

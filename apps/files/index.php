@@ -32,8 +32,7 @@ OCP\Util::addscript( 'files', 'jquery.fileupload' );
 OCP\Util::addscript( 'files', 'files' );
 OCP\Util::addscript( 'files', 'filelist' );
 OCP\Util::addscript( 'files', 'fileactions' );
-OCP\Util::addscript( 'files', 'welcome_response' );
-OCP\Util::addscript( 'files', 'welcome' );
+
 if(!isset($_SESSION['timezone'])){
 	OCP\Util::addscript( 'files', 'timezone' );
 }
@@ -100,6 +99,8 @@ $tmpl->assign( 'files', $files );
 $tmpl->assign( 'uploadMaxFilesize', $maxUploadFilesize);
 $tmpl->assign( 'uploadMaxHumanFilesize', OCP\Util::humanFileSize($maxUploadFilesize));
 $tmpl->assign( 'allowZipDownload', intval(OCP\Config::getSystemValue('allowZipDownload', true)));
+//OCP\Util::addscript( 'files', 'welcome_response' );
+//OCP\Util::addscript( 'files', 'welcome' );
 $tmpl->printPage();
 
 ?>

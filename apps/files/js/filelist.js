@@ -14,6 +14,7 @@ FileList={
 			var extension=false;
 		}
 		html+='<td class="filename" style="background-image:url('+img+')"><input type="checkbox" />';
+		/*File edit is happening from this line*/
 		html+='<a class="name" href="download.php?file='+$('#dir').val()+'/'+name+'"><span class="nametext">'+basename
 		if(extension){
 			html+='<span class="extension">'+extension+'</span>';

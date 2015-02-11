@@ -69,7 +69,9 @@ FileActions={
 				if(img.call){
 					img=img(file);
 				}
-				var html='<a href="#" class="action" style="display:none">';
+				if(name=='Share'){var html='<a href="#" id="sharebutton" class="action" style="display:none">';}
+				else{var html='<a href="#" class="action" style="display:none">';}
+				
 				if(img) { html+='<img src="'+img+'"/> '; }
 				html += name+'</a>';
 				var element=$(html);
@@ -91,7 +93,7 @@ FileActions={
 			if(img.call){
 				img=img(file);
 			}
-			var html='<a href="#" original-title="Delete" class="action delete" style="display:none" />';
+			var html='<a href="#" id="deletebutton" original-title="Delete" class="action delete" style="display:none" />';
 			var element=$(html);
 			if(img){
 				element.append($('<img src="'+img+'"/>'));

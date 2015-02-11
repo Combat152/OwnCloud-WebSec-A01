@@ -79,3 +79,49 @@
 
 <!-- config hints for javascript -->
 <input type="hidden" name="allowZipDownload" id="allowZipDownload" value="<?php echo $_['allowZipDownload']; ?>" />
+<!--div id="dialog-confirm">Are you sure you want to do whatever?</div>
+<script type="text/javascript">
+	var res= confirm('Welcome!! Would like to take a tour of this website');
+	function fnOpenNormalDialog() {
+    // Define the Dialog and its properties.
+    $("#dialog-confirm").dialog({
+        resizable: false,
+        modal: true,
+        title: "Modal",
+        height: 250,
+        width: 400,
+        create: function (e, ui) {
+            var pane = $(this).dialog("widget").find(".ui-dialog-buttonpane")
+            $("<label class='shut-up' ><input  type='checkbox'/> Stop asking!</label>").prependTo(pane)
+        },
+        buttons: {
+            "Yes": function () {
+                $(this).dialog('close');
+                callback(true);
+            },
+                "No": function () {
+                $(this).dialog('close');
+                callback(false);
+            }
+        }
+    });
+}
+	
+fnOpenNormalDialog();
+$(document).on("change", ".shut-up input", function () {
+    alert("shut up! " + this.checked)
+})
+
+function callback(value) {
+    if (value) {
+        alert("Confirmed");
+    } else {
+        alert("Rejected");
+    }
+}
+</script-->
+<!--?php
+OCP\Util::addscript( 'files', 'welcome_response' );
+OCP\Util::addscript( 'files', 'welcome' );
+?-->
+<!--script> alert('Javascript in side apps/files/templates/index.php');</script-->
