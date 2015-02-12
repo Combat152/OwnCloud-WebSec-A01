@@ -28,55 +28,102 @@
 				echo '/>';
 			?>
 		<?php endforeach; ?>
-<div id="dialog-confirm">Are you sure you want to do whatever?</div>
+		
+<div id="dialog-confirm">Would you like to take a tour of the website</div>
+
+
 <script type="text/javascript">
-	var res= confirm('Welcome!! Would like to take a tour of this website');
+	//var res= confirm('Welcome!! Would like to take a tour of this website');
+	var setResponse = true;
+	if(setResponse){
+	var test ="Test text";
 	function fnOpenNormalDialog() {
     // Define the Dialog and its properties.
-    $("#dialog-confirm").dialog({
-        resizable: false,
-        modal: true,
-        title: "Modal",
-        height: 250,
-        width: 400,
-        create: function (e, ui) {
-            var pane = $(this).dialog("widget").find(".ui-dialog-buttonpane")
-            $("<label class='shut-up' ><input  type='checkbox'/> Stop asking!</label>").prependTo(pane)
-        },
-        buttons: {
-            "Yes": function () {
-                $(this).dialog('close');
-                callback(true);
-            },
-                "No": function () {
-                $(this).dialog('close');
-                callback(false);
-            }
-        }
-    });
-}
+		    $("#dialog-confirm").dialog({
+		        resizable: false,
+		        modal: true,
+		        title: "Modal",
+		        height: 150,
+		        width: 300,
+		        create: function (e, ui) {
+		            var pane = $(this).dialog("widget").find(".ui-dialog-buttonpane")
+		            $("<label class='checkboxclass' ><input  type='checkbox'/> Never ask me again!</label>").prependTo(pane)
+		        },
+		        buttons: {
+		            "Yes": function () {
+		            	$(this).dialog("close");
+		                $(this).dialog('Taking you to the tour');
+						callback(setResponse);
+						
+		            	},
+		                "No": function () {
+		                $(this).dialog("close");
+		                $(this).dialog('Taking you to the website');
+		                callback(false);
+		            	}
+		        	}
+		    	});
+		}
+	}
 	
 fnOpenNormalDialog();
-$(document).on("change", ".shut-up input", function () {
-    alert("shut up! " + this.checked)
+$(document).on("change", ".checkboxclass input", function () {
+	setResponse=!this.checked;
+    alert("You will not see tour option again "+setResponse);
 })
 
 function callback(value) {
     if (value) {
-        alert("Confirmed");
+        alert("Taking you to the tour");
+
     } else {
-        alert("Rejected");
+        alert("Taking you to the website");
     }
 }
-</script>		
-		
-		
+
+</script>	
+
+<script>
+	
+	/**
+	 *AJAX to use javascript variable in php
+	 * on the same page. 
+	 */
+	var toTest="To test string";
+	var toTestBool=true;
+	function ajaxCall(){
+		$.ajax({
+			url:"http://192.168.56.102/owncloud/core/templates/dummy.php",
+			type: 'GET',
+			data: {p:toTestBool},
+			success: function(data){
+				alert('Data Sent!')
+			}
+			
+		});
+	}
+	
+	ajaxCall();
+</script>
 		<script type="text/javascript" src="core/js/joyride-master/jquery.cookie.js"></script>
-		<script type="text/javascript" src="core/js/joyride-master/modernizr.mq.js"></script>	
+		<script type="text/javascript" src="core/js/joyride-master/modernizr.mq.js"></script>
 		<script type="text/javascript" src="core/js/joyride-master/jquery.joyride-2.1.js"></script>
 		<script type="text/javascript" src="core/js/joyride-master/test.js"></script>
-	
-	</head>
+		
+</head>
+
+<!--******************************For database update*************************-->
+<?php
+
+echo 'RECEIVED VALUE BACK';
+echo $_GET['var'];
+//$sql = 'drop table oc_test';
+//$query=\OCP\DB::prepare($sql);
+//$result=$query->execute();
+ 
+
+?>
+
 
 	<body id="<?php echo $_['bodyid'];?>">
 		<!-- Adding  Joyride elements -->
@@ -91,11 +138,14 @@ function callback(value) {
 		</div></header>
 
 		<nav><div id="navigation">
-			<ul id="apps" class="svg">
+			<ul id="apps1" class="svg">
 				<?php foreach($_['navigation'] as $entry): ?>
 					<li><a style="background-image:url(<?php echo $entry['icon']; ?>)" href="<?php echo $entry['href']; ?>" title="" <?php if( $entry['active'] ): ?> class="active"<?php endif; ?>><?php echo $entry['name']; ?></a>
 					</li>
 				<?php endforeach; ?>
+					<li>
+						<a style="background-image:url(/owncloud/core/img/places/Assistance.png)" href="error.php">Assistance</a>
+					</li>
 			</ul>
 
 			<ul id="settings" class="svg">
@@ -113,10 +163,10 @@ function callback(value) {
 			<?php echo $_['content']; ?>
 		</div>
 		<ol id="joyrideid">
-			<li data-id="new_button">Click on this button to upload a file.</li>
-			<li data-id="fileList">Click on this bar to edit file</li>	
-			<li data-id="sharebutton">Click here to share this file</li>
-			<li data-id="deletebutton">Click here to delete this particular file</li>
+			<li style="display:none" data-id="new_button">Click on this button to upload a file.<br><br></li>
+			<li style="display:none" data-id="fileList">Click on this bar to edit file<br><br></li>	
+			<li style="display:none" data-id="sharebutton">Click here to share this file<br><br></li>
+			<li style="display:none" data-id="deletebutton">Click here to delete this particular file<br><br></li>
 		</ol>
 
 
