@@ -1,13 +1,20 @@
 <?php
-//$rec = $_GET['p'];
-use \OCP\AppFramework\App;
-if(true){
-$sql = 'create table oc_test (col1 varchar(20),col2 varchar(20))';
-$query=\OCP\DB::prepare($sql);
-//$result=$query->execute();
+$user=$_GET['id'];
+echo $user;
+$servername = "localhost";
+$username="root";
+$password="root";
+$conn = new PDO("mysql:host=$servername;dbname=owncloud",$username,$password);
+
+if($user){
+$sql = "update oc_users set tour_flag='true' where uid='".$user."'";
+echo "true";
+echo $sql;
+$conn->exec($sql);
 }
 else {
-	echo "Not true";
+$sql = "update oc_users set tour_flag='false' where uid ='".$user."'";
+$conn->exec($sql);
 }
 
 //$rec = $_GET['p'];

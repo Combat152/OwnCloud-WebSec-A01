@@ -61,6 +61,7 @@ FileActions={
 		}
 		parent.children('a.name').append('<span class="fileactions" />');
 		var defaultAction=FileActions.getDefault(FileActions.getCurrentMimeType(),FileActions.getCurrentType());
+		
 		for(name in actions){
 			// no rename and share action for the 'Shared' dir
 			if((name=='Rename' || name =='Share') && type=='dir' && filename=='Shared') { continue; }

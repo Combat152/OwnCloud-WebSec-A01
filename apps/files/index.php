@@ -89,7 +89,6 @@ $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
 $freeSpace=OC_Filesystem::free_space('/');
 $freeSpace=max($freeSpace,0);
 $maxUploadFilesize = min($maxUploadFilesize ,$freeSpace);
-
 $tmpl = new OCP\Template( 'files', 'index', 'user' );
 $tmpl->assign( 'fileList', $list->fetchPage() );
 $tmpl->assign( 'breadcrumb', $breadcrumbNav->fetchPage() );

@@ -16,6 +16,7 @@
 			var oc_appswebroot = '<?php echo OC::$APPSWEBROOT; ?>';
 			var oc_current_user = '<?php echo OC_User::getUser() ?>';
 		</script>
+		
 		<?php foreach($_['jsfiles'] as $jsfile): ?>
 			<script type="text/javascript" src="<?php echo $jsfile; ?>"></script>
 		<?php endforeach; ?>
@@ -30,12 +31,93 @@
 		<?php endforeach; ?>
 		
 <div id="dialog-confirm">Would you like to take a tour of the website</div>
-
+<?php 
+		$servername = "localhost";
+		$username="root";
+		$password="root";
+		$conn = new PDO("mysql:host=$servername;dbname=owncloud",$username,$password);
+		$user=OC_User::getUser();
+		$sql = "select tour_flag from oc_users where uid = '".$user."'";
+		$sql_ins = "update oc_users set tour_flag='false' where uid = '".$user."'";
+		$stmnt = $conn->prepare($sql);
+		$stmnt->execute();
+		//$result = $stmnt->setFetchMode(PDO::FETCH_ASSOC); 
+		//foreach(new TableRows(new RecursiveArrayIterator($stmnt->fetchAll())) as $k=>$v) { 
+        //echo $v;
+    	//}
+    	$res=$stmnt->fetchAll(PDO::FETCH_ASSOC);
+		echo $val = $res[0]['tour_flag'];
+		if($val=='' or $val==null){
+			$conn->exec($sql_ins);
+		}
+		
+ ?>
+ 	
+<script>
+	
+	/**
+	 *AJAX to use javascript variable in php
+	 * on the same page. 
+	 */
+		var flag="<?php 
+					$servername = "localhost";
+					$username="root";
+					$password="root";
+					$conn = new PDO("mysql:host=$servername;dbname=owncloud",$username,$password);
+					$user=OC_User::getUser();
+					$sql = "select tour_flag from oc_users where uid = '".$user."'";
+					$stmnt = $conn->prepare($sql);
+					$stmnt->execute();
+					//$result = $stmnt->setFetchMode(PDO::FETCH_ASSOC); 
+					//foreach(new TableRows(new RecursiveArrayIterator($stmnt->fetchAll())) as $k=>$v) { 
+			        //echo $v;
+			    	//}
+			    	$res=$stmnt->fetchAll(PDO::FETCH_ASSOC);
+					if(count($res)>0){
+						echo $res[0]['tour_flag'];
+					}
+ 	?>";
+	var setResponse=false;
+	var toTest="To test string";
+	var toTestBool=true;
+	var userid = "<?php echo OC_User::getUser();?>";
+	function ajaxCall(){
+		$.ajax({
+			url:"http://192.168.56.102/owncloud/core/templates/dummy.php",
+			type: 'GET',
+			data: {p:setResponse,id:userid},
+			success: function(data){
+			//alert('Data Sent!')
+			}
+			
+		});
+	}
+	if(flag!="true"){
+	ajaxCall();
+	}
+</script> 	
 
 <script type="text/javascript">
-	//var res= confirm('Welcome!! Would like to take a tour of this website');
-	var setResponse = true;
-	if(setResponse){
+var tour_flag="<?php 
+		$servername = "localhost";
+		$username="root";
+		$password="root";
+		$conn = new PDO("mysql:host=$servername;dbname=owncloud",$username,$password);
+		$user=OC_User::getUser();
+		$sql = "select tour_flag from oc_users where uid = '".$user."'";
+		$stmnt = $conn->prepare($sql);
+		$stmnt->execute();
+		//$result = $stmnt->setFetchMode(PDO::FETCH_ASSOC); 
+		//foreach(new TableRows(new RecursiveArrayIterator($stmnt->fetchAll())) as $k=>$v) { 
+        //echo $v;
+    	//}
+    	$res=$stmnt->fetchAll(PDO::FETCH_ASSOC);
+		if(count($res)>0){
+			echo $res[0]['tour_flag'];
+		}
+ 	?>";
+if(tour_flag=="false"){
+	
 	var test ="Test text";
 	function fnOpenNormalDialog() {
     // Define the Dialog and its properties.
@@ -52,24 +134,21 @@
 		        buttons: {
 		            "Yes": function () {
 		            	$(this).dialog("close");
-		                $(this).dialog('Taking you to the tour');
 						callback(setResponse);
-						
-		            	},
+					   	},
 		                "No": function () {
 		                $(this).dialog("close");
-		                $(this).dialog('Taking you to the website');
-		                callback(false);
+		                callback(setResponse);
 		            	}
 		        	}
 		    	});
 		}
-	}
+	
 	
 fnOpenNormalDialog();
 $(document).on("change", ".checkboxclass input", function () {
-	setResponse=!this.checked;
-    alert("You will not see tour option again "+setResponse);
+	setResponse=this.checked;
+    alert(setResponse);
 })
 
 function callback(value) {
@@ -80,31 +159,11 @@ function callback(value) {
         alert("Taking you to the website");
     }
 }
+}
 
 </script>	
 
-<script>
-	
-	/**
-	 *AJAX to use javascript variable in php
-	 * on the same page. 
-	 */
-	var toTest="To test string";
-	var toTestBool=true;
-	function ajaxCall(){
-		$.ajax({
-			url:"http://192.168.56.102/owncloud/core/templates/dummy.php",
-			type: 'GET',
-			data: {p:toTestBool},
-			success: function(data){
-				alert('Data Sent!')
-			}
-			
-		});
-	}
-	
-	ajaxCall();
-</script>
+
 		<script type="text/javascript" src="core/js/joyride-master/jquery.cookie.js"></script>
 		<script type="text/javascript" src="core/js/joyride-master/modernizr.mq.js"></script>
 		<script type="text/javascript" src="core/js/joyride-master/jquery.joyride-2.1.js"></script>
@@ -112,13 +171,14 @@ function callback(value) {
 		
 </head>
 
+
 <!--******************************For database update*************************-->
 <?php
 
 echo 'RECEIVED VALUE BACK';
 echo $_GET['var'];
 //$sql = 'drop table oc_test';
-//$query=\OCP\DB::prepare($sql);
+//$query= OCP\DB::prepare($sql);
 //$result=$query->execute();
  
 
