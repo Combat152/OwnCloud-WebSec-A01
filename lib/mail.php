@@ -34,7 +34,14 @@ class OC_Mail {
 		$SMTPAUTH = OC_Config::getValue( 'mail_smtpauth', false ); 
 		$SMTPUSERNAME = OC_Config::getValue( 'mail_smtpname', '' ); 
 		$SMTPPASSWORD = OC_Config::getValue( 'mail_smtppassword', '' );  
-
+		
+		
+		error_log("MODE ".$SMTPMODE,0);
+		error_log("HOST ".$SMTPHOST,0);
+		error_log("AUTH ".$SMTPAUTH,0);
+		error_log("USERNAME ".$SMTPUSERNAME,0);
+		error_log("PASSWORD ".$SMTPPASSWORD,0);
+		
 
 		$mailo = new PHPMailer();
 		if($SMTPMODE=='sendmail') {
@@ -78,10 +85,16 @@ class OC_Mail {
 		}
 		$mailo->CharSet = 'UTF-8';
 
-		$mailo->Send();
+		
+		//$mailo->Send();
+			
+		$message = 'test email';
+		$res=mail($toaddress ,$subject ,$message );
+		error_log('MAIL SENT ?'.$res);
 		unset($mailo);
 
 		OC_Log::write('Mail from '.$fromname.' ('.$fromaddress.')'.' to: '.$toname.'('.$toaddress.')'.' subject: '.$subject,'mail',OC_Log::DEBUG);
+		error_log('Mail from '.$fromname.' ('.$fromaddress.')'.' to: '.$toname.'('.$toaddress.')'.' subject: '.$subject,0);
 
 	}
 

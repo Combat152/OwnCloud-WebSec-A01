@@ -10,5 +10,14 @@ $CONFIG = array(
 "dbuser" => 'oc_student',
 "dbpassword" => '5a1d1e840c2da58ac2d5582164cee1b5',
 "installed" => true,
+"mail_domain" => 'gmail.com',
+"mail_smtpmode" => 'smtp',
+"mail_smtphost" => 'smtp.gmail.com:25',
+"mail_smtpsecure" => 'ssl',
+"mail_smtpauth" => true,
+"mail_smtpauthtype" => 'LOGIN',
+"mail_smtpname" => 'gandhi.harshul.88@gmail.com',
+"mail_smtppassword" => 'Inspiron!1545',
+"mail_smtpdebug" => true
 );
 ?>

@@ -20,3 +20,35 @@
 	margin-top: 3px;
 	float: left;
 }
+
+
+#comments{
+	border-bottom: 2px solid black;
+	max-height: 200px;
+	overflow-y: scroll;
+}
+
+#comments .comment{
+	border-top: 1px solid black;
+}
+
+.comment .comment_user{
+	border: 1px solid #EEE;
+font-weight: bold;
+padding: 2px;
+overflow: auto;
+
+}
+
+.comment .comment_text{
+	padding:2px;
+}
+
+.btnComment{
+	 float:right; 
+	 font-size:0.6em;
+}
+#comment_area{
+	
+	width:90%;
+}

@@ -20,7 +20,7 @@
 * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *
 */
-
+error_log('Request received'.$_REQUEST['getfile'],0);
 $RUNTIME_NOAPPS = TRUE; //no apps, yet
 
 require_once('lib/base.php');

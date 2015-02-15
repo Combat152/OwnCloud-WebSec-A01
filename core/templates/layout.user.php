@@ -31,73 +31,25 @@
 		<?php endforeach; ?>
 		
 <div id="dialog-confirm">Would you like to take a tour of the website</div>
-<?php 
-		$servername = "localhost";
-		$username="root";
-		$password="root";
-		$conn = new PDO("mysql:host=$servername;dbname=owncloud",$username,$password);
+<!--?php 
+		
 		$user=OC_User::getUser();
-		$sql = "select tour_flag from oc_users where uid = '".$user."'";
-		$sql_ins = "update oc_users set tour_flag='false' where uid = '".$user."'";
-		$stmnt = $conn->prepare($sql);
-		$stmnt->execute();
-		//$result = $stmnt->setFetchMode(PDO::FETCH_ASSOC); 
-		//foreach(new TableRows(new RecursiveArrayIterator($stmnt->fetchAll())) as $k=>$v) { 
-        //echo $v;
-    	//}
-    	$res=$stmnt->fetchAll(PDO::FETCH_ASSOC);
-		echo $val = $res[0]['tour_flag'];
-		if($val=='' or $val==null){
-			$conn->exec($sql_ins);
+		$sql = OCP\DB::prepare("select tour_flag from oc_users where uid = '".$user."'");
+		$sql_set_false = OCP\DB::prepare("update oc_users set tour_flag='false' where uid = '".$user."'");
+		$result = $sql->execute();
+    	
+		$val = $res[0]['tour_flag'];
+		
+		if($val==NULL || $val == ''){
+			error_log('Value received from data base is : '.$val);
+			$sql_set_false->execute();
 		}
 		
- ?>
- 	
-<script>
-	
-	/**
-	 *AJAX to use javascript variable in php
-	 * on the same page. 
-	 */
-		var flag="<?php 
-					$servername = "localhost";
-					$username="root";
-					$password="root";
-					$conn = new PDO("mysql:host=$servername;dbname=owncloud",$username,$password);
-					$user=OC_User::getUser();
-					$sql = "select tour_flag from oc_users where uid = '".$user."'";
-					$stmnt = $conn->prepare($sql);
-					$stmnt->execute();
-					//$result = $stmnt->setFetchMode(PDO::FETCH_ASSOC); 
-					//foreach(new TableRows(new RecursiveArrayIterator($stmnt->fetchAll())) as $k=>$v) { 
-			        //echo $v;
-			    	//}
-			    	$res=$stmnt->fetchAll(PDO::FETCH_ASSOC);
-					if(count($res)>0){
-						echo $res[0]['tour_flag'];
-					}
- 	?>";
-	var setResponse=false;
-	var toTest="To test string";
-	var toTestBool=true;
-	var userid = "<?php echo OC_User::getUser();?>";
-	function ajaxCall(){
-		$.ajax({
-			url:"http://192.168.56.102/owncloud/core/templates/dummy.php",
-			type: 'GET',
-			data: {p:setResponse,id:userid},
-			success: function(data){
-			//alert('Data Sent!')
-			}
-			
-		});
-	}
-	if(flag!="true"){
-	ajaxCall();
-	}
-</script> 	
-
+ ?-->
+ 	 
 <script type="text/javascript">
+var setResponse;
+var tour_start;
 var tour_flag="<?php 
 		$servername = "localhost";
 		$username="root";
@@ -116,9 +68,9 @@ var tour_flag="<?php
 			echo $res[0]['tour_flag'];
 		}
  	?>";
-if(tour_flag=="false"){
+if(tour_flag=="false" || tour_flag==null || tour_flag=='' ){
+	console.log('Showing dialog');
 	
-	var test ="Test text";
 	function fnOpenNormalDialog() {
     // Define the Dialog and its properties.
 		    $("#dialog-confirm").dialog({
@@ -132,13 +84,29 @@ if(tour_flag=="false"){
 		            $("<label class='checkboxclass' ><input  type='checkbox'/> Never ask me again!</label>").prependTo(pane)
 		        },
 		        buttons: {
-		            "Yes": function () {
+		               "Yes": function () {
 		            	$(this).dialog("close");
 						callback(setResponse);
+						$('#joyrideid').joyride({
+					  'autoStart':true,
+			   		  'tipLocation': 'bottom',           // 'top' or 'bottom' in relation to parent
+					  'nubPosition': 'auto',           // override on a per tooltip bases
+					  'scrollSpeed': 300,              // Page scrolling speed in ms 
+					  'startTimerOnClick': false,       // true/false to start timer on first click
+					  'nextButton': true,              // true/false for next button visibility
+					  'tipAnimation': 'pop',           // 'pop' or 'fade' in each tip
+					  'pauseAfter': [],                // array of indexes where to pause the tour after
+					  'tipAnimationFadeSpeed': 300,    // if 'fade'- speed in ms of transition
+					  'cookieMonster': false,           // true/false for whether cookies are used
+					  'cookieName': 'JoyRide3872w22',         // choose your own cookie name
+					  'cookieDomain': false           // set to false or yoursite.com
+				
+				});
 					   	},
 		                "No": function () {
 		                $(this).dialog("close");
 		                callback(setResponse);
+		                
 		            	}
 		        	}
 		    	});
@@ -148,7 +116,8 @@ if(tour_flag=="false"){
 fnOpenNormalDialog();
 $(document).on("change", ".checkboxclass input", function () {
 	setResponse=this.checked;
-    alert(setResponse);
+	console.log('setRepsonse : '+setResponse);
+    //alert(setResponse);
 })
 
 function callback(value) {
@@ -164,26 +133,54 @@ function callback(value) {
 </script>	
 
 
+<script>
+	
+	/**
+	 *AJAX to use javascript variable in php
+	 * on the same page. 
+	 */
+		console.log('Inside aajx sript '.setResponse );
+		var flag="<?php 
+					$servername = "localhost";
+					$username="root";
+					$password="root";
+					$conn = new PDO("mysql:host=$servername;dbname=owncloud",$username,$password);
+					$user=OC_User::getUser();
+					$sql = "select tour_flag from oc_users where uid = '".$user."'";
+					$stmnt = $conn->prepare($sql);
+					$stmnt->execute();
+					//$result = $stmnt->setFetchMode(PDO::FETCH_ASSOC); 
+					//foreach(new TableRows(new RecursiveArrayIterator($stmnt->fetchAll())) as $k=>$v) { 
+			        //echo $v;
+			    	//}
+			    	$res=$stmnt->fetchAll(PDO::FETCH_ASSOC);
+					if(count($res)>0){
+						echo $res[0]['tour_flag'];
+					}
+ 	?>";
+	//var setResponse=false;
+	var userid = "<?php echo OC_User::getUser();?>";
+	function ajaxCall(){
+		console.log(setResponse);
+		$.ajax({
+			url:"/owncloud/core/templates/dummy.php",
+			type: 'GET',
+			data: {p:setResponse,id:userid},
+			success: function(data){
+			//alert('Data Sent!')
+			}
+			
+		});
+	}
+	if(flag=="false" || flag==null){
+	console.log('AJAX CALLED');
+	ajaxCall();
+	}
+</script> 	
 		<script type="text/javascript" src="core/js/joyride-master/jquery.cookie.js"></script>
 		<script type="text/javascript" src="core/js/joyride-master/modernizr.mq.js"></script>
 		<script type="text/javascript" src="core/js/joyride-master/jquery.joyride-2.1.js"></script>
-		<script type="text/javascript" src="core/js/joyride-master/test.js"></script>
-		
 </head>
-
-
-<!--******************************For database update*************************-->
-<?php
-
-echo 'RECEIVED VALUE BACK';
-echo $_GET['var'];
-//$sql = 'drop table oc_test';
-//$query= OCP\DB::prepare($sql);
-//$result=$query->execute();
- 
-
-?>
-
 
 	<body id="<?php echo $_['bodyid'];?>">
 		<!-- Adding  Joyride elements -->
@@ -204,7 +201,7 @@ echo $_GET['var'];
 					</li>
 				<?php endforeach; ?>
 					<li>
-						<a style="background-image:url(/owncloud/core/img/places/Assistance.png)" href="error.php">Assistance</a>
+						<a id="assistance" style="background-image:url(/owncloud/core/img/places/Assistance.png)" >Assistance</a>
 					</li>
 			</ul>
 
@@ -218,17 +215,39 @@ echo $_GET['var'];
 				</div>
 			</ul>
 		</div></nav>
-
+		<div id ="naman" data-id="<?php echo 'true';?>"></div>
 		<div id="content">
 			<?php echo $_['content']; ?>
 		</div>
+		
+		
 		<ol id="joyrideid">
 			<li style="display:none" data-id="new_button">Click on this button to upload a file.<br><br></li>
 			<li style="display:none" data-id="fileList">Click on this bar to edit file<br><br></li>	
 			<li style="display:none" data-id="sharebutton">Click here to share this file<br><br></li>
 			<li style="display:none" data-id="deletebutton">Click here to delete this particular file<br><br></li>
 		</ol>
-
+		
+		<script>
+		$('#assistance').click(function(){
+			$('#joyrideid').joyride({
+			  'autoStart':true,
+	   		  'tipLocation': 'bottom',           // 'top' or 'bottom' in relation to parent
+			  'nubPosition': 'auto',           // override on a per tooltip bases
+			  'scrollSpeed': 300,              // Page scrolling speed in ms 
+			  'startTimerOnClick': false,       // true/false to start timer on first click
+			  'nextButton': true,              // true/false for next button visibility
+			  'tipAnimation': 'pop',           // 'pop' or 'fade' in each tip
+			  'pauseAfter': [],                // array of indexes where to pause the tour after
+			  'tipAnimationFadeSpeed': 300,    // if 'fade'- speed in ms of transition
+			  'cookieMonster': false,           // true/false for whether cookies are used
+			  'cookieName': 'JoyRide3872w22',         // choose your own cookie name
+			  'cookieDomain': false           // set to false or yoursite.com
+		
+				});
+		});
+		</script>
+		
 
 			
 	</body>

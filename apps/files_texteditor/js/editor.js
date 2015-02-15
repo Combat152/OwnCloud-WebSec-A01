@@ -184,11 +184,13 @@ function showFileEditor(dir,filename){
 	$('#editor').remove();
 	if(!editorIsShown()){
 		// Loads the file editor and display it.
-		$('#content').append('<div id="editor"></div>');
+		$('#content').append('<div id="editor"></div>');		
+		
 		var data = $.getJSON(
 			OC.filePath('files_texteditor','ajax','loadfile.php'),
 			{file:filename,dir:dir},
 			function(result){
+				console.log(result);
 				if(result.status == 'success'){
 					// Save mtime
 					$('#editor').attr('data-mtime', result.data.mtime);
@@ -226,6 +228,46 @@ function showFileEditor(dir,filename){
 								doFileSave();	
 							}						});
 					});
+					
+					var path = $('#editor').attr('data-dir')+'/'+$('#editor').attr('data-filename');
+					$.post(OC.filePath('files_sharing','ajax','getcomments.php'), {path:filename},function(jsondata){
+			
+						
+			
+										
+						var str = "";
+						str += '<div id="comment_cont" style="position:absolute;z-index:10;right:3%;bottom:6%;border:1px solid black">';
+						str += '<div id="comments">';
+						
+						for(var i in jsondata){
+							
+							
+							str += '<div class="comment" data-id='+jsondata[i]["commentid"]+'>';
+							str += '<div class="comment_user">';
+							str += jsondata[i]["uid"];
+							str += '<input class="btnComment" type="button" value="x" onclick="deleteComment(this)" />';
+							str += '</div>';
+							str += '<div class="comment_text">';
+							str += jsondata[i]["comment"];
+							str += '</div>';
+							str += '</div>';
+								
+							
+						}
+						
+																
+						str += '</div>';
+						str += '<textarea id="comment_area">';
+						str += '</textarea>';
+						str += '</div>';		
+						$('#content').append(str);
+						
+					
+								
+					},'json');
+					
+					
+						
 				} else {
 					// Failed to get the file.
 					OC.dialogs.alert(result.data.message, t('files_texteditor','An error occurred!'));
@@ -275,6 +317,8 @@ function hideFileEditor(){
 		});
 		is_editor_shown = false;
 	}
+	
+	$("#comment_cont").remove();
 }
 
 // Reopens the last document
@@ -288,6 +332,54 @@ function reopenEditor(){
 		});
 	});
 	is_editor_shown  = true;
+}
+
+
+function saveComment(){
+		
+		var comment = $("#comment_area").val();
+		var path = $('#editor').attr('data-dir')+'/'+$('#editor').attr('data-filename');
+		$.post(OC.filePath('files_sharing','ajax','savecomment.php'), {comment:comment,path:path },function(jsondata){
+			
+			
+			var str = '';
+			str += '<div class="comment" data-id='+jsondata["cid"]+'>';
+			str += '<div class="comment_user">';
+			str += jsondata["u"];
+			str += '<input class="btnComment" type="button" value="x" onclick="deleteComment(this)" />';
+			str += '</div>';
+			str += '<div class="comment_text">';
+			str += comment;
+			str += '</div>';
+			str += '</div>';
+
+			
+			$("#comments").append(str);
+			$("#comment_area").val('');
+					
+		},'json');
+	
+		
+}
+
+
+function deleteComment(obj){
+	
+	var comment = $(obj).parent().parent();
+	var commentid = comment.attr("data-id");
+	$.post(OC.filePath('files_sharing','ajax','deletecomments.php'), {commentid:commentid},function(jsondata){
+		
+		
+		if(jsondata["result"] == "success"){
+			
+			comment.remove();
+			
+		}else{
+			
+			alert("Cannot remove comment");
+		}
+		
+	},'json');
 }
 
 // resizes the editor window
@@ -328,4 +420,14 @@ $(document).ready(function(){
 		}
 		$('#notification').fadeOut();
 	});
+	
+
+	$("#comment_area").live("keydown",function(e){
+		
+		if(e.keyCode == 13){
+			
+			saveComment();
+		}
+	});	
+	
 });

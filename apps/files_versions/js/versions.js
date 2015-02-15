@@ -29,6 +29,25 @@ $(document).ready(function(){
 				createVersionsDropdown(filename, file);
 			}
 		});
+		/*FileActions.register('file','Invite to comment',function(){return OC.imagePath('core','actions/history')},function(filename){
+
+			if (scanFiles.scanning){return;}//workaround to prevent additional http request block scanning feedback
+			
+			var file = $('#dir').val()+'/'+filename;
+			// Check if drop down is already visible for a different file
+			if (($('#dropdown').length > 0)) {
+				if (file != $('#dropdown').data('file')) {
+					$('#dropdown').hide('blind', function() {
+						$('#dropdown').remove();
+						$('tr').removeClass('mouseOver');
+						createVersionsDropdown(filename, file);
+					});
+				}
+			} else {
+				createVersionsDropdown(filename, file);
+			}
+		});*/
+
 	}
 });
 

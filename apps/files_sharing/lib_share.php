@@ -235,7 +235,91 @@ class OC_Share {
 			return false;
 		}
 	}
-
+	
+	/*
+	 * save comment corresponding
+	 *  to each user
+	 */
+	public static function saveComments($user,$comment,$filepath) {
+		$source = self::cleanPath($source);
+		$query = OCP\DB::prepare("insert into oc_comments (uid, comment, filepath) values (?,?,?)");
+		$query->execute(array($user,$comment,$filepath));
+		
+		$last_id_query = OCP\DB::prepare('SELECT LAST_INSERT_ID() as last_id');
+		$res = $last_id_query->execute()->fetchAll();
+		
+				
+		return $res[0]["last_id"];
+		
+	}
+	
+	
+	/*
+	 * get comment corresponding
+	 *  to each file
+	 */
+	public static function getComments($filepath) {
+		
+		error_log($filepath,0);
+		$query = OCP\DB::prepare("select commentid,uid,comment from oc_comments where filepath like '%".$filepath."%'");
+		$result = $query->execute()->fetchAll();
+		
+		/*
+		$data = array();
+				
+				while($row = $result->fetch_assoc()) {
+										 $id = $row["commentid"];
+					error_log($id);			
+					$data[$id] = array();		
+					$data[$id]["c"] = $row["comment"];
+					$data[$id]["u"] = $row["uid"];
+									 }*/
+		
+		
+		return $result;
+		
+	}
+	
+	
+	/*
+	 * check for the owner of the
+	 * comment to be deleted
+	 */
+	public static function getOwner($commentid) {
+		
+		
+		$query = OCP\DB::prepare("select commentid,uid,filepath from oc_comments where commentid = ".$commentid);
+		$result = $query->execute()->fetchAll();
+		
+		/*
+		$data = array();
+				
+				while($row = $result->fetch_assoc()) {
+										 $id = $row["commentid"];
+					error_log($id);			
+					$data[$id] = array();		
+					$data[$id]["c"] = $row["comment"];
+					$data[$id]["u"] = $row["uid"];
+		}*/
+		
+		
+		return $result;
+		
+	}
+	
+	
+	/*
+	 * Delete comment for a 
+	 * particular commentid
+	 */
+	public static function deleteComment($commentid) {
+		
+		$query = OCP\DB::prepare("delete from oc_comments where commentid= ".$commentid);
+		$query->execute();
+			
+	}
+	
+		
 	/**
 	 * Get all items the current user is sharing
 	 * @return An array with all items the user is sharing

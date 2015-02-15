@@ -1,0 +1,3 @@
+{"app":"files_sharing","message":"Not existing parent folder : \/userb\/files\/Shared\/useratext","level":3,"time":1423890235}
+{"app":"core","message":"unable to rename, file is not writable : userc\/files\/files","level":3,"time":1423902540}
+{"app":"files_sharing","message":"Not existing parent folder : \/usera\/files\/Shared\/files","level":3,"time":1423998062}

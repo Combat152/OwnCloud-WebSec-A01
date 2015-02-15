@@ -18,10 +18,13 @@ FileActions={
 		if(FileActions.actions.all){
 			actions=$.extend( actions, FileActions.actions.all )
 		}
+		//console.log(FileActions);
 		if(mime){
+			//console.log(mime);
 			if(FileActions.actions[mime]){
 				actions=$.extend( actions, FileActions.actions[mime] )
 			}
+			//console.log(actions);
 			var mimePart=mime.substr(0,mime.indexOf('/'));
 			if(FileActions.actions[mimePart]){
 				actions=$.extend( actions, FileActions.actions[mimePart] )
