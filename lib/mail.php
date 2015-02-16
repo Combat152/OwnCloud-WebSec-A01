@@ -86,12 +86,14 @@ class OC_Mail {
 		$mailo->CharSet = 'UTF-8';
 
 		
-		//$mailo->Send();
+		$mailo->Send();
 			
-		$message = 'test email';
-		$res=mail($toaddress ,$subject ,$message );
-		error_log('MAIL SENT ?'.$res);
+		
+		//$message = 'test email';
+		//$res=mail($toaddress ,$subject ,$message );
+		//error_log('MAIL SENT ?'.$res);
 		unset($mailo);
+		
 
 		OC_Log::write('Mail from '.$fromname.' ('.$fromaddress.')'.' to: '.$toname.'('.$toaddress.')'.' subject: '.$subject,'mail',OC_Log::DEBUG);
 		error_log('Mail from '.$fromname.' ('.$fromaddress.')'.' to: '.$toname.'('.$toaddress.')'.' subject: '.$subject,0);

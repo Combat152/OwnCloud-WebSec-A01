@@ -10,6 +10,8 @@
 #privateLink { border-top:1px solid #ddd; padding-top:0.5em; }
 a.unshare { float:right; display:inline; margin:0 .5em; padding:.3em .3em 0 .3em !important; opacity:.5; }
 a.unshare:hover { opacity:1; }
+a.unshareinvite { float:right; display:inline; margin:0 .5em; padding:.3em .3em 0 .3em !important; opacity:.5; }
+a.unshareinvite:hover { opacity:1; }
 #share_with { width: 16em; }
 #privateLink label, .edit { font-weight:normal; }
 #dropdowninvite { display:block;  position:absolute; z-index:100; width:16em; right:0; margin-right:7em; background:#eee; padding:1em;

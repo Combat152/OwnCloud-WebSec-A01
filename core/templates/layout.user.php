@@ -106,19 +106,32 @@ if(tour_flag=="false" || tour_flag==null || tour_flag=='' ){
 		                "No": function () {
 		                $(this).dialog("close");
 		                callback(setResponse);
-		                
+		                document.cookie="Popupkey=true";
 		            	}
 		        	}
 		    	});
 		}
 	
-	
+
+if(getCookie('Popupkey')!='true'){	
 fnOpenNormalDialog();
+}
 $(document).on("change", ".checkboxclass input", function () {
 	setResponse=this.checked;
 	console.log('setRepsonse : '+setResponse);
     //alert(setResponse);
-})
+});
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
 
 function callback(value) {
     if (value) {
