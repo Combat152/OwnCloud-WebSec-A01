@@ -31,22 +31,6 @@
 		<?php endforeach; ?>
 		
 <div id="dialog-confirm">Would you like to take a tour of the website</div>
-<!--?php 
-		
-		$user=OC_User::getUser();
-		$sql = OCP\DB::prepare("select tour_flag from oc_users where uid = '".$user."'");
-		$sql_set_false = OCP\DB::prepare("update oc_users set tour_flag='false' where uid = '".$user."'");
-		$result = $sql->execute();
-    	
-		$val = $res[0]['tour_flag'];
-		
-		if($val==NULL || $val == ''){
-			error_log('Value received from data base is : '.$val);
-			$sql_set_false->execute();
-		}
-		
- ?-->
- 	 
 <script type="text/javascript">
 var setResponse;
 var tour_start;
@@ -59,10 +43,6 @@ var tour_flag="<?php
 		$sql = "select tour_flag from oc_users where uid = '".$user."'";
 		$stmnt = $conn->prepare($sql);
 		$stmnt->execute();
-		//$result = $stmnt->setFetchMode(PDO::FETCH_ASSOC); 
-		//foreach(new TableRows(new RecursiveArrayIterator($stmnt->fetchAll())) as $k=>$v) { 
-        //echo $v;
-    	//}
     	$res=$stmnt->fetchAll(PDO::FETCH_ASSOC);
 		if(count($res)>0){
 			echo $res[0]['tour_flag'];
@@ -86,7 +66,11 @@ if(tour_flag=="false" || tour_flag==null || tour_flag=='' ){
 		        buttons: {
 		               "Yes": function () {
 		            	$(this).dialog("close");
-						callback(setResponse);
+		            	$('#progressbar').show();
+						alert("Taking you to the tour");
+						if(setResponse){
+							ajaxCall();
+						}
 						$('#joyrideid').joyride({
 					  'autoStart':true,
 			   		  'tipLocation': 'bottom',           // 'top' or 'bottom' in relation to parent
@@ -105,24 +89,25 @@ if(tour_flag=="false" || tour_flag==null || tour_flag=='' ){
 					   	},
 		                "No": function () {
 		                $(this).dialog("close");
-		                callback(setResponse);
-		                document.cookie="Popupkey=true";
+		                alert("Taking you to the website");
+		                if(setResponse){
+							ajaxCall();
+						}
+		                //document.cookie="Popupkey=true";
 		            	}
 		        	}
 		    	});
 		}
 	
 
-if(getCookie('Popupkey')!='true'){	
 fnOpenNormalDialog();
-}
 $(document).on("change", ".checkboxclass input", function () {
 	setResponse=this.checked;
 	console.log('setRepsonse : '+setResponse);
     //alert(setResponse);
 });
 
-function getCookie(cname) {
+/*function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i=0; i<ca.length; i++) {
@@ -131,16 +116,8 @@ function getCookie(cname) {
         if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
     }
     return "";
-}
+}*/
 
-function callback(value) {
-    if (value) {
-        alert("Taking you to the tour");
-
-    } else {
-        alert("Taking you to the website");
-    }
-}
 }
 
 </script>	
@@ -185,10 +162,12 @@ function callback(value) {
 			
 		});
 	}
+	/*
 	if(flag=="false" || flag==null){
-	console.log('AJAX CALLED');
-	ajaxCall();
-	}
+		console.log('AJAX CALLED');
+		
+		}*/
+	 
 </script> 	
 		<script type="text/javascript" src="core/js/joyride-master/jquery.cookie.js"></script>
 		<script type="text/javascript" src="core/js/joyride-master/modernizr.mq.js"></script>
@@ -228,21 +207,22 @@ function callback(value) {
 				</div>
 			</ul>
 		</div></nav>
-		<div id ="naman" data-id="<?php echo 'true';?>"></div>
 		<div id="content">
 			<?php echo $_['content']; ?>
+			<div id="progressbar"></div>
 		</div>
 		
-		
 		<ol id="joyrideid">
-			<li style="display:none" data-id="new_button">Click on this button to upload a file.<br><br></li>
-			<li style="display:none" data-id="fileList">Click on this bar to edit file<br><br></li>	
-			<li style="display:none" data-id="sharebutton">Click here to share this file<br><br></li>
-			<li style="display:none" data-id="deletebutton">Click here to delete this particular file<br><br></li>
+			<li style="display:none" data-id="new_button">Click on this button to upload a file. Select the file to upload from the upload dialog box that appears.<br><br></li>					
+			<li style="display:none" data-id="fileList">Click on file name to open it in editor where you can edit the file<br><br></li>	
+			<li style="display:none" data-id="sharebutton">Click here and select the user,with whom you want to share the file, from the list.<br><br></li>
+			<li style="display:none" data-id="deletebutton">Click here to delete this particular file.<br><br></li>
 		</ol>
 		
 		<script>
+		
 		$('#assistance').click(function(){
+			$('#progressbar').show();
 			$('#joyrideid').joyride({
 			  'autoStart':true,
 	   		  'tipLocation': 'bottom',           // 'top' or 'bottom' in relation to parent
@@ -259,6 +239,27 @@ function callback(value) {
 		
 				});
 		});
+		
+// 		JQuery UI Progressbar settings
+		var pbar = $('#progressbar');
+		pbar.progressbar("enable");
+		pbar.progressbar({
+			value:0
+		});
+		
+		$('a.joyride-next-tip').live('click',function(){
+			var progress = pbar.progressbar("value")+25;
+			pbar.progressbar({
+				value:progress
+			});
+		});
+		
+		pbar.progressbar({"complete":function(){
+			alert("Congratulations, you have completed the tour.");
+			pbar.hide();
+			}
+		});
+		
 		</script>
 		
 

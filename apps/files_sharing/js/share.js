@@ -268,7 +268,7 @@ OC.Share={
 			sharedWith += '<input type="checkbox" name="permissionsinvite" id="'+uid_shared_with+'" class="permissionsinvite" '+checked+' />';
 			sharedWith += '<label class="editinvite" for="'+uid_shared_with+'" '+style+'>can edit</label>';
 			sharedWith += '</li>';
-			console.log(sharedWith);
+		
 		}
 		if (isGroup) {
 			// Groups are added to a different list
@@ -375,7 +375,6 @@ OC.Share={
 		$('#emailButtoninvite').hide();
 	},
 	emailPrivateLink:function() {
-		console.log('inside private link');
 		var link = $('#privateLinkText').val();
 		var file = link.substr(link.lastIndexOf('/') + 1).replace(/%20/g, ' ');
 		$.post(OC.filePath('files_sharing', 'ajax', 'email.php'), { toaddress: $('#email').val(), link: link, file: file } );
@@ -553,7 +552,6 @@ $(document).ready(function() {
 		OC.Share.share(item, uid_shared_with, 0, function() {
 			if (isGroup) {
 				// Reload item because we don't know which users are in the group
-				alert('Sharing');
 				OC.Share.loadItem(item);
 				var users;
 				$.each(OC.Share.itemGroups, function(index, group) {
@@ -588,7 +586,6 @@ $(document).ready(function() {
 		OC.Share.share(item, uid_shared_with, 0, function() {
 			if (isGroup) {
 				// Reload item because we don't know which users are in the group
-				alert('Sharing');
 				OC.Share.loadItem(item);
 				var users;
 				$.each(OC.Share.itemGroups, function(index, group) {
@@ -659,7 +656,6 @@ $(document).ready(function() {
 		if (this.checked) {
 			// Create a private link
 			OC.Share.share(item, 'public', 0, function(token) {
-				alert('Sending link');
 				OC.Share.showPrivateLink(item, token);
 				// Change icon
 				OC.Share.icons[item] = OC.imagePath('core', 'actions/public');
@@ -684,12 +680,10 @@ $(document).ready(function() {
 	});
 
 	$('#emailPrivateLink').live('submit', function() {
-		console.log('Sending email');
 		OC.Share.emailPrivateLink();
 	});
 	
 	$('#emailPrivateLinkinvite').live('submit', function() {
-		console.log('Sending email');
 		OC.Share.emailPrivateLinkInvite();
 	});
 	

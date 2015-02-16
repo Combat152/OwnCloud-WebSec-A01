@@ -52,3 +52,11 @@ overflow: auto;
 	
 	width:90%;
 }
+
+
+#progressbar{
+	display:none;
+	bottom:0;
+	position:fixed;
+	width:100%;
+}
