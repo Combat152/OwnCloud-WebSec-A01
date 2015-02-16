@@ -150,6 +150,7 @@ $(document).on("change", ".checkboxclass input", function () {
  	?>";
 	//var setResponse=false;
 	var userid = "<?php echo OC_User::getUser();?>";
+	document.cookie="userid="+userid;
 	function ajaxCall(){
 		console.log(setResponse);
 		$.ajax({

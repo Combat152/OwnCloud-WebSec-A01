@@ -60,3 +60,12 @@ overflow: auto;
 	position:fixed;
 	width:100%;
 }
+
+#online_users{
+
+position: absolute;
+bottom: 7%;
+right: 19%;
+border: 1px solid black;
+padding: 4px;
+}

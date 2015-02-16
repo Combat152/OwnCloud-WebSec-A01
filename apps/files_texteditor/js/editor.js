@@ -1,3 +1,5 @@
+completeFilePath = "";
+
 function setEditorSize(){
 	// Sets the size of the text editor window.
 	fillWindow($('#editor'));
@@ -181,6 +183,7 @@ function giveEditorFocus(){
 // Loads the file editor. Accepts two parameters, dir and filename.
 function showFileEditor(dir,filename){
 	// Delete any old editors
+	setFilePath(dir, filename);
 	$('#editor').remove();
 	if(!editorIsShown()){
 		// Loads the file editor and display it.
@@ -276,7 +279,34 @@ function showFileEditor(dir,filename){
 			}
 		// End ajax
 		);
+		console.log(data);
 		is_editor_shown = true;
+
+		var hostIP = window.location.host;
+		var host = "http://" + hostIP + ":3000/";
+		var sockURL = host + "socket.io/socket.io.js";
+		
+		$.getScript(sockURL, function() {
+			var socket = io.connect(host);
+
+			socket.emit('identity', { userid : getUserid()} );
+			socket.emit('whoareonline', { filepath : getFilePath()} );
+
+			socket.on('theseareonline', function(data) {
+				console.log("Online user :" + data);
+				data = $.unique(data);
+				var str = "";
+				str += "<div id='online_users'>Online users : <br/>";
+				for (var i in data) {
+					str += "<ul>" + data[i] + "</ul>";
+				}
+				str += "</div>";
+				console.log(str);
+				$('#content').append(str);
+			});
+		});
+
+
 	}
 }
 
@@ -429,5 +459,28 @@ $(document).ready(function(){
 			saveComment();
 		}
 	});	
-	
+
 });
+
+function setFilePath(dir, filename) {
+	completeFilePath = "/" + getUserid() + "/files" + dir + "/" + filename;
+}
+
+function getFilePath() {
+	return completeFilePath;
+}
+
+function getUserid() {
+	return getCookie("userid");
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
